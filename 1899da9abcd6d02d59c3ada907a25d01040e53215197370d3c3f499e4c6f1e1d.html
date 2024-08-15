@@ -1,0 +1,201 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!-- JPT Feb 2016 -->
+<html>
+	<head>
+	<!-- At runtime, the client will inject JSON directly into the DOM as shown in the example below. -->
+	<!-- Note that each value in the associative array can be either a string or an array of strings. -->
+	<script type="application/json" id="policies">
+		// POLICIES_JSON_PLACEHOLDER	
+	</script>
+	<script language="JavaScript">
+		// functions for accessing and formatting model elements 
+		var policies = JSON.parse(document.getElementById('policies').innerHTML);
+
+		function addTableRowWithText(text) {
+				if (text != null) {
+					var elementText = '<li>' + text + '</li>\n';	
+					var temp = document.createElement('template');
+					temp.innerHTML = elementText;
+					var fragment = temp.content;
+					document.getElementById("mainTable").appendChild(fragment);	
+				}			
+		}
+
+		function generateElement(policyName) {
+			var policyText = policies[policyName];
+			if (policyText != null) {
+				if (policyText instanceof Array) {
+					for (var i = 0; i < policyText.length; i++) {
+						var policyTextItem = policyText[i];
+						addTableRowWithText(policyTextItem);
+					}
+				} else {
+					addTableRowWithText(policyText);
+				}
+			}
+		}
+
+		function getPolicyValue(policyName) {
+			return policies[policyName];
+		}
+
+	</script>
+	<style> body { margin: 0px; padding: 0px; height: 0px ; color:#515050; font-size:12px; font-family:HelveticaNeue; }</style>
+	</head>
+	<body>
+		<style>		
+				body {
+					color:#515050;
+					font-family:arial,helvetica,sans-serif;
+					font-size:95%;
+					background-color: #FFFFFF;
+				}		
+				a:hover {
+					border-bottom:medium none;
+					color:#535353;
+				}		
+				a:link {
+					color:#0A84C1;
+					font-family:Arial,Verdana,Helvetica,sans-serif;
+					text-decoration:none;
+				}
+				table,th,td {
+				 	font-size:95%;
+				 	font-family:Arial,Verdana,Helvetica,sans-serif;
+				}
+			</style>
+
+	<ul id="mainTable">
+	</ul>
+
+	<script language="JavaScript">
+
+		var kFareRulesRestrictURL = "http://www.priceline.com/rules/";
+		var kFareRulesRestrictClickHereURL = "http://www.priceline.com/rules/";
+
+		var kCheckinURL = "https://www.priceline.com/Customerservice/faq/ShowHelp.asp?faq=ext(air_id)&negotiatorapp=y";
+		var kValidPassportURL = "https://www.priceline.com/Customerservice/faq/ShowHelp.asp?faq=ext(air_id)&negotiatorapp=y";
+
+		var kDisinsectionHelpURL = "https://www.priceline.com/Customerservice/faq/ShowHelp.asp?faq=ext(AIRPOP_disinsection)&negotiatorapp=y";
+
+		var kFlightTripInsuranceTermsURL = "https://www.priceline.com/air_description_of_coverage";
+
+		var kPartnerAirlinesURL = "https://www.priceline.com/Customerservice/faq/ShowHelp.asp?faq=ext(AIRPOP_PARTNERS)&negotiatorapp=y";
+
+		var kAirlineRegulationsURL = "https://www.priceline.com/Customerservice/faq/ShowHelp.asp?faq=ext(AIRPOP_ARC)&negotiatorapp=y";
+
+		var kHazmatURL = "https://www.faa.gov/about/initiatives/hazmat_safety/";
+
+		var dotRequirementsURL = "https://www.transportation.gov/individuals/aviation-consumer-protection/refunds/";
+
+
+		var fChangesAllowed = getPolicyValue("changesAllowed");
+		var disinsectionURL = getPolicyValue("disinsectionURL");
+		var fPassportRequired = getPolicyValue("passportRequired");
+		var fSeatSelectionAllowed = getPolicyValue("seatSelectionAllowed");
+		var fChooseInsurance = getPolicyValue("chooseInsurance");					// trip protection
+		var fOneWay = getPolicyValue("oneWay");
+
+
+		var cabinClass = getPolicyValue("cabinClass");
+		if (cabinClass == null) {
+			cabinClass = "ECO";
+		}
+
+		var offerMethodCode = getPolicyValue("offerMethodCode");
+		if (offerMethodCode == null) {
+			offerMethodCode = "RTL";
+		}
+
+		var changesApply = "Once confirmed, airline change penalties and restrictions apply. Most tickets are non-refundable. See your airline's " +
+    						"<a href=\"" + kFareRulesRestrictClickHereURL + "\">full fare rules</a> here.";
+    
+    	var nameChanges = "Airline tickets are non-transferrable. Name changes or adjustments are not allowed once purchased.";
+
+	var dotRequirements = "Involuntary, material changes made by your airline to itineraries to, from or within the United States may entitle you to a refund per " + 
+						"<a href\"" + dotRequirementsURL +"\">U.S. DOT Guidelines for refunds</a>";
+    
+    	var availability = "Airfares and flight availability are not guaranteed until purchased.";
+    
+    	var ticketing = "";
+    	if (!fPassportRequired) {
+    		ticketing = "You will be issued electronic tickets. Remember to bring a valid <a href=\"" + kCheckinURL + "\">government-issued photo ID</a> with you to check in.";
+    	} else {
+    		ticketing = "You will be issued electronic tickets. All travelers will need a <a href=\"" + kValidPassportURL + 
+    			"\">valid passport</a> and you may also need to show " +
+    			"additional documentation at your destination an/or in connecting countries.";
+    	}
+    
+    	var sopqFlightDetails = "Flight details will be provided immediately after purchase. You must fly on the flights assigned to you.";
+    
+    	var opqFlightDetails = "If we find an airline that accepts your price, flight details will be provided immediately after purchase. " + 
+    						"You must fly on the flights assigned to you.";
+    
+    	var opqNonRefundable = "Once booked, your airline tickets are non-refundable and non-changeable.";
+    
+    	var tripTypeString = (fOneWay ? "one-way" : "round-trip");
+    	var cabinClassString = "coach/economy";
+    	if ("PEC" == cabinClass) cabinClassString = "premium economy";
+    	if ("BUS" == cabinClass) cabinClassString = "business";
+    	if ("FST" == cabinClass) cabinClassString = "first"; 
+
+    	var partnerAirlines = "Your airline tickets will be " + tripTypeString + " " + cabinClassString + " class tickets issued on one of Priceline's <a href=\"" + kPartnerAirlinesURL + "\">partner airlines</a>. Frequent flyer mileage accrual is not available.";
+    
+    	var overbooking = "Priceline customers are protected by the same <a href=\"" + kAirlineRegulationsURL + 
+    					"\">airline regulations</a> extended to all passengers, including protection against overbookings and baggage loss.";
+    
+    	var disinsectionWarning = null;
+    	if (disinsectionURL != null && disinsectionURL.length > 0) {
+        	disinsectionWarning = "On trips to this destination planes may undergo <a href=\"" + kDisinsectionHelpURL + "\">disinsection</a>.";
+    	}
+    
+    	var chooseInsurance = null;
+    	if (fChooseInsurance) {
+        	chooseInsurance = "You added Trip Protection. View <a href=\"" + kFlightTripInsuranceTermsURL + "\">Description of Coverage</a>," +
+                           " which includes full terms and conditions.<br/>";
+    	}
+
+    	var hazmat = "Federal law forbids the carriage of hazardous materials such as aerosols, fireworks, and flammable liquids aboard " +
+    					"aircraft in your luggage or on your person. For full details on prohibited materials contact your airline or visit " +
+    					"the <a href=\"" + kHazmatURL + "\">FAA website</a>.";
+
+
+		if (offerMethodCode == "RTL") {
+			addTableRowWithText(changesApply);
+			addTableRowWithText(nameChanges);
+			addTableRowWithText(availability);
+			addTableRowWithText(ticketing);
+			addTableRowWithText(disinsectionWarning);
+			addTableRowWithText(chooseInsurance);
+			addTableRowWithText(hazmat);
+			addTableRowWithText(dotRequirements);
+		}
+		if (offerMethodCode == "SOPQ") {
+			addTableRowWithText(sopqFlightDetails);
+			addTableRowWithText(opqNonRefundable);
+			addTableRowWithText(nameChanges);
+			addTableRowWithText(partnerAirlines);
+			addTableRowWithText(overbooking);
+			addTableRowWithText(ticketing);
+			addTableRowWithText(disinsectionWarning);
+			addTableRowWithText(chooseInsurance);
+			addTableRowWithText(hazmat);
+			addTableRowWithText(dotRequirements);
+		}
+		if (offerMethodCode == "OPQ") {
+			addTableRowWithText(opqFlightDetails);
+			addTableRowWithText(opqNonRefundable);
+			addTableRowWithText(nameChanges);
+			addTableRowWithText(partnerAirlines);
+			addTableRowWithText(overbooking);
+			addTableRowWithText(ticketing);
+			addTableRowWithText(disinsectionWarning);
+			addTableRowWithText(chooseInsurance);
+			addTableRowWithText(hazmat);
+			addTableRowWithText(dotRequirements);
+		}
+		
+	</script>
+	</body>
+
+</html>
